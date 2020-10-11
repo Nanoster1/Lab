@@ -16,12 +16,23 @@ namespace Lab05_Factorial
         {
             Console.Write(new string(a, b));
         }
+        static void Check(string numberStr)                                 //Проверка на число
+        {
+            int a;
+            bool checking = Int32.TryParse(numberStr, out a);
+            while (checking == false)
+            {
+                Main();
+            }    
+        }
 
 
         static void Main()                                                  //Основа и ввод числа
-        {           
+        {
             WriteGreeting();
-            int number = int.Parse(Console.ReadLine());
+            string numberStr = Console.ReadLine();
+            Check(numberStr); 
+            int number = int.Parse(numberStr);
             Loading();
             Output(number);
         }
@@ -29,8 +40,6 @@ namespace Lab05_Factorial
         {
             string greeting = ("Здравствуйте, ваше число, пожалуйста:");
             Console.WriteLine(greeting);
-            WriteString(' ', greeting.Length / 2 - 2);
-            Console.WriteLine("...");
         }
         static void Loading()                                               //Экран загрузки (Чисто декор)
         {
@@ -85,7 +94,7 @@ namespace Lab05_Factorial
             else if (number <= 0)
             {
                 fact -= 1;
-                if (number % 2 != 0)
+                if (number % 2 == 0)
                     fact = fact * (-1);
             }
             while (i <= Math.Abs(number))
