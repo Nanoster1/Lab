@@ -6,7 +6,7 @@ namespace Lab05_Factorial
 {
     class Program
     {
-        static void SetCursor(string conc, int y)                            //Функция для курсора
+        static void SetCursor(string conc, int y)                           //Функция для курсора
         {
             int x = Console.WindowWidth / 2 - conc.Length / 2;
             int y2 = Console.WindowHeight / 2 - y;
@@ -16,25 +16,19 @@ namespace Lab05_Factorial
         {
             Console.Write(new string(a, b));
         }
-        static void Check(string numberStr)                                 //Проверка на число
-        {
-            ulong a;
-            bool checking = ulong.TryParse(numberStr, out a);
-            while (checking == false)
-            {
-                Main();
-            }    
-        }
 
 
-        static void Main()                                                  //Основа
+
+
+
+        static void Main()                                                   //Основа
         {
             WriteGreeting();
             ulong number = Input();
             Loading();
             Output(number);
         }
-        static void WriteGreeting()                                         //Приветствие
+        static void WriteGreeting()                                          //Приветствие
         {
             string greeting = ("Здравствуйте, ваше число, пожалуйста:");
             for (int i = 0; i < greeting.Length; i++)
@@ -42,14 +36,23 @@ namespace Lab05_Factorial
                 Console.Write(greeting[i]);
                 Thread.Sleep(50);
             }
-        }
-        static ulong Input()                                               //Ввод
+        } 
+        static ulong Input()                                                  //Ввод
         {
             string numberStr = Console.ReadLine();
             Check(numberStr);
             return ulong.Parse(numberStr);
         }
-        static void Loading()                                               //Экран загрузки (Чисто декор)
+        static void Check(string numberStr)                                 //Проверка на число
+        {
+            ulong a;
+            bool checking = ulong.TryParse(numberStr, out a);
+            while (checking == false)
+            {
+                Main();
+            }
+        }
+        static void Loading()                                                 //Экран загрузки (Чисто декор)
         {
             int i = 1;
             string load = "Loading";
@@ -69,15 +72,15 @@ namespace Lab05_Factorial
             while (true)
             {
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
                 IntoOutput(conc);
                 Console.ForegroundColor = ConsoleColor.Black;
-                Console.BackgroundColor = ConsoleColor.Blue;
-                IntoOutput(conc);
-                Console.ForegroundColor = ConsoleColor.Red;
                 Console.BackgroundColor = ConsoleColor.Green;
                 IntoOutput(conc);
+                //Console.ForegroundColor = ConsoleColor.Red;
+                //Console.BackgroundColor = ConsoleColor.Green;
+                //IntoOutput(conc);
             }
         }
         static void IntoOutput(string conc)                                    //Табличка ("Внутренности вывода")
