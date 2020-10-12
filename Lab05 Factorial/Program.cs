@@ -18,8 +18,8 @@ namespace Lab05_Factorial
         }
         static void Check(string numberStr)                                 //Проверка на число
         {
-            int a;
-            bool checking = Int32.TryParse(numberStr, out a);
+            ulong a;
+            bool checking = ulong.TryParse(numberStr, out a);
             while (checking == false)
             {
                 Main();
@@ -27,12 +27,10 @@ namespace Lab05_Factorial
         }
 
 
-        static void Main()                                                  //Основа и ввод числа
+        static void Main()                                                  //Основа
         {
             WriteGreeting();
-            string numberStr = Console.ReadLine();
-            Check(numberStr); 
-            int number = int.Parse(numberStr);
+            ulong number = ulong.Parse(Input());
             Loading();
             Output(number);
         }
@@ -41,12 +39,33 @@ namespace Lab05_Factorial
             string greeting = ("Здравствуйте, ваше число, пожалуйста:");
             Console.WriteLine(greeting);
         }
+        static string Input()                                               //Ввод
+        {
+            string numberStr = Console.ReadLine();
+            Check(numberStr);
+            return numberStr;
+        }
         static void Loading()                                               //Экран загрузки (Чисто декор)
         {
             int i = 1;
             string load = "Loading";
             while (i <= 3)
             {
+                if (i == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.BackgroundColor = ConsoleColor.White;
+                }
+                else if (i == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.BackgroundColor = ConsoleColor.Green;
+                }
                 Console.Clear();
                 i += 1;
                 SetCursor(load, -1);
@@ -55,16 +74,19 @@ namespace Lab05_Factorial
                 Thread.Sleep(600);
             }
         }
-        static void Output(int number)                                      //Зацикленный вывод со сменой цвета
+        static void Output(ulong number)                                      //Зацикленный вывод со сменой цвета
         {
             string conc = ($"@-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-|{Сalculation(number)}|-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-@");
             while (true)
             {
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.BackgroundColor = ConsoleColor.DarkMagenta;
                 IntoOutput(conc);
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.Blue;
+                IntoOutput(conc);
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.BackgroundColor = ConsoleColor.Green;
                 IntoOutput(conc);
             }
@@ -85,22 +107,13 @@ namespace Lab05_Factorial
             Console.Clear();
 
         }
-        static long Сalculation(int number)                                 //Вычисление факториала
+        static ulong Сalculation(ulong number)                                 //Вычисление факториала
         {
-            int i = 1;
-            long fact = 0;
-            if (number >= 0)
-                fact += 1;
-            else if (number <= 0)
+            
+            ulong fact = 1;
+            for(ulong i = 1; i <= number; i++)
             {
-                fact -= 1;
-                if (number % 2 == 0)
-                    fact = fact * (-1);
-            }
-            while (i <= Math.Abs(number))
-            {
-                fact = fact * i;
-                i = i + 1;
+                fact *= i;
             }
             return fact;
         }
