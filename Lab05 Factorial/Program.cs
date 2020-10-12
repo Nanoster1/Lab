@@ -30,42 +30,31 @@ namespace Lab05_Factorial
         static void Main()                                                  //Основа
         {
             WriteGreeting();
-            ulong number = ulong.Parse(Input());
+            ulong number = Input();
             Loading();
             Output(number);
         }
         static void WriteGreeting()                                         //Приветствие
         {
             string greeting = ("Здравствуйте, ваше число, пожалуйста:");
-            Console.WriteLine(greeting);
+            for (int i = 0; i < greeting.Length; i++)
+            {
+                Console.Write(greeting[i]);
+                Thread.Sleep(50);
+            }
         }
-        static string Input()                                               //Ввод
+        static ulong Input()                                               //Ввод
         {
             string numberStr = Console.ReadLine();
             Check(numberStr);
-            return numberStr;
+            return ulong.Parse(numberStr);
         }
         static void Loading()                                               //Экран загрузки (Чисто декор)
         {
             int i = 1;
             string load = "Loading";
             while (i <= 3)
-            {
-                if (i == 1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.BackgroundColor = ConsoleColor.White;
-                }
-                else if (i == 2)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.Blue;
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.BackgroundColor = ConsoleColor.Green;
-                }
+            {              
                 Console.Clear();
                 i += 1;
                 SetCursor(load, -1);
@@ -91,25 +80,25 @@ namespace Lab05_Factorial
                 IntoOutput(conc);
             }
         }
-        static void IntoOutput(string conc)                                 //Табличка ("Внутренности вывода")
+        static void IntoOutput(string conc)                                    //Табличка ("Внутренности вывода")
         {
             SetCursor(conc, -1);
-            Console.Write('#');
-            WriteString('=', conc.Length - 2);
-            Console.WriteLine('#');
+            DoubleIntoOut(conc);
             SetCursor(conc, 0);
             Console.WriteLine(conc);
             SetCursor(conc, 1);
+            DoubleIntoOut(conc);
+            Thread.Sleep(1000);
+            Console.Clear();
+        }
+        static void DoubleIntoOut(string conc)                                 //1 и 2 строки рамки                  
+        {
             Console.Write('#');
             WriteString('=', conc.Length - 2);
             Console.Write('#');
-            Thread.Sleep(1000);
-            Console.Clear();
-
         }
         static ulong Сalculation(ulong number)                                 //Вычисление факториала
-        {
-            
+        {       
             ulong fact = 1;
             for(ulong i = 1; i <= number; i++)
             {
