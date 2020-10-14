@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Reflection.Metadata.Ecma335;
+using System.Linq.Expressions;
 using System.Threading;
 
 namespace Lab05_Factorial
@@ -9,15 +9,13 @@ namespace Lab05_Factorial
         static void SetCursor(string conc, int y)                           //Функция для курсора
         {
             int x = Console.WindowWidth / 2 - conc.Length / 2;
-            int y2 = Console.WindowHeight / 2 - y;
+            int y2 = Console.WindowHeight / 2 + y;
             Console.SetCursorPosition(x, y2);
         }
         static void WriteString(char a, int b)                              //Функция для множественного написания символов
         {
             Console.Write(new string(a, b));
         }
-
-
 
 
 
@@ -68,37 +66,41 @@ namespace Lab05_Factorial
         }
         static void Output(ulong number)                                      //Зацикленный вывод со сменой цвета
         {
-            string conc = ($"@-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-|{Сalculation(number)}|-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-@");
+            string conc = ($"│$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$ |{Сalculation(number)}| $-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$│");
+                Console.Clear();               
             while (true)
             {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.BackgroundColor = ConsoleColor.White;
-                IntoOutput(conc);
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.BackgroundColor = ConsoleColor.Green;
-                IntoOutput(conc);
-                //Console.ForegroundColor = ConsoleColor.Red;
-                //Console.BackgroundColor = ConsoleColor.Green;
-                //IntoOutput(conc);
+                IntoOutput(conc, '1', '0');
+                SwapColors(Console.ForegroundColor, Console.BackgroundColor);
+                IntoOutput(conc, '0', '1');
+                SwapColors(Console.ForegroundColor, Console.BackgroundColor);
             }
         }
-        static void IntoOutput(string conc)                                    //Табличка ("Внутренности вывода")
+        static void IntoOutput(string conc, char symbol, char doublesymbol)                                    //Табличка ("Внутренности вывода")
         {
-            SetCursor(conc, -1);
-            DoubleIntoOut(conc);
-            SetCursor(conc, 0);
-            Console.WriteLine(conc);
-            SetCursor(conc, 1);
-            DoubleIntoOut(conc);
-            Thread.Sleep(1000);
             Console.Clear();
+            SetCursor(conc, -1);
+            DoubleIntoOut(conc, '┌', '┐');
+            SetCursor(conc, 0);
+            Console.Write(conc);
+            SetCursor(conc, 1);
+            DoubleIntoOut(conc, '└', '┘');
+            Thread.Sleep(1000);          
         }
-        static void DoubleIntoOut(string conc)                                 //1 и 2 строки рамки                  
+        static void DoubleIntoOut(string conc, char leftSymbol, char rightSymbol)                                 //строки рамки                  
         {
-            Console.Write('#');
-            WriteString('=', conc.Length - 2);
-            Console.Write('#');
+            Console.Write(leftSymbol);
+            WriteString('─', conc.Length - 2);
+            Console.Write(rightSymbol);
+        }
+        static void SwapColors(ConsoleColor f, ConsoleColor b)    //Смена цветов
+        {
+            ConsoleColor c;
+            c = b;
+            b = f;
+            f = c;
+            Console.ForegroundColor = f;
+            Console.BackgroundColor = b;
         }
         static ulong Сalculation(ulong number)                                 //Вычисление факториала
         {       
