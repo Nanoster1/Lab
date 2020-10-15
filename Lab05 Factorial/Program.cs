@@ -47,6 +47,7 @@ namespace Lab05_Factorial
             bool checking = ulong.TryParse(numberStr, out a);
             while (checking == false)
             {
+                Console.WriteLine("Ошибка ввода. Факториала не существует");
                 Main();
             }
         }
