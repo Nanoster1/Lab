@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Threading;
 
 namespace Array2
 {
@@ -7,26 +9,55 @@ namespace Array2
         static void Main()
         {
             Greetings();
-            PressKey();
+            if (PressKey())                                                          //Вписывание букв для выбора
+            {
+                Console.Clear();
+                int[] firstAr = InputElofAr(1);                                      //Ввод первого массива
+                int[] secondAr = InputElofAr(2);                                     //Ввод второго массива
+                Output(CalculateEsc(firstAr, secondAr));                             //Вывод
+            }
+            else
+            {
+                Console.Clear();
+                int[][] firstMultiAr = InputMultiAr(1);                              //Ввод первого массива массивов
+                int[][] secondMultiAr = InputMultiAr(2);                             //Ввод второго массива массивов
+                Output(CalculateEnt(firstMultiAr, secondMultiAr));                   //Вывод
+            }
         }
-        static void Greetings()
+        static void Greetings()                                                      //Приветствие
         {
             Console.WriteLine("Здравствуйте.");
-            Console.WriteLine("Нажмите Escape, если хотите провести операцию с одномерными массивами.");
-            Console.WriteLine("Нажмите Enter, если хотите провести операцию с массивом массивов.");
+            Console.WriteLine("Впишите O, если хотите провести операцию с одномерными массивами.");
+            Console.WriteLine("Впишите MM, если хотите провести операцию с массивом массивов.");
         }
-        static void PressKey()
+        static bool PressKey()                                                       //Метод для вписывания букв
         {
-            if (Console.ReadKey().Key == ConsoleKey.Escape)
-                Output(CalculateEsc(InputAr(1), InputAr(2)));
-            else if (Console.ReadKey().Key == ConsoleKey.Enter)
-                Output(CalculateEnt(InputMultiAr(1), InputMultiAr(2)));
+            bool c = false;
+            if (Console.ReadKey().Key == ConsoleKey.O)
+            {
+                c = true;
+                return c;
+            }
+            else if (Console.ReadKey().Key == ConsoleKey.M)
+            {
+                c = false;
+                return c;  
+            }   
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Ошибка ввода");
+                Thread.Sleep(500);
+                Main();
+                return c;
+            }
         }
-        static bool CalculateEnt(int[][] firstAr, int[][] secondAr)
+        static bool CalculateEnt(int[][] firstAr, int[][] secondAr)                         //Проверка массивов массивов 
         {
             int s = 0;
             bool concl = false;
             int f = 0;
+            int ff = 0;
             if (firstAr.Length < secondAr.Length)
                 return concl;
             else
@@ -35,35 +66,45 @@ namespace Array2
                 {
                     if (CalculateEsc(firstAr[f], secondAr[s]))
                     {
-                        concl = true;
-                        s++;
-                        if (s == secondAr.Length)
-                            return concl;
-                    }
-                    else
-                    {
-                        if (f > 0 && s > 0 && CalculateEsc(firstAr[f - 1], secondAr[s - 1]))
+                        while (ff < firstAr.Length)
                         {
-                            concl = false;
-                            return concl;
+                            if (CalculateEsc(firstAr[ff], secondAr[s]))
+                            {
+                                concl = true;
+                                s++;
+                                if (s == secondAr.Length)
+                                    return concl;
+                            }
+                            else
+                            {
+                                if (ff > 0 && s > 0 && CalculateEsc(firstAr[ff - 1], secondAr[s - 1]))
+                                {
+                                    concl = false;
+                                    return concl;
+                                }
+                            }
+                            ff++;
+                            if (ff == firstAr.Length && s < secondAr.Length)
+                            {
+                                concl = false;
+                                return concl;
+                            }
                         }
                     }
+                    else
+                            concl = false;
                     f++;
-                    if (f == firstAr.Length && s < secondAr.Length)
-                    {
-                        concl = false;
-                        return concl;
-                    }
+                    ff = 0;
                 }
                 return concl;
             }
         }
-        static int[][] InputMultiAr(int n)
+        static int[][] InputMultiAr(int n)                                                          //Ввод массива массивов
         {
-            int numAr;                                           //Кол-во элементов в массивах массива
+            int numAr;                                                                              //Кол-во элементов в массивах массива
             Console.WriteLine($"Введите кол-во массивов {n}-го массива массивов");
-            int numberArray = InputNum();                        //Кол-во массивов в массиве массивов
-            int[][] arrays = new int[numberArray][];             //Массив массивов
+            int numberArray = InputNum();                                                           //Кол-во массивов в массиве массивов
+            int[][] arrays = new int[numberArray][];                                                //Массив массивов
             int numberOfArray;
             for (int i = 0; i < numberArray; i++)
             {
@@ -82,16 +123,17 @@ namespace Array2
         }
         static void Output(bool Calculate)
         {
-            if (Calculate == true)
+            if (Calculate)
                 Console.WriteLine("Ваш второй массив является подмассивом первого массива");
             else
                 Console.WriteLine("Ваш второй массив не является подмассивом первого массива");
         }
-        static bool CalculateEsc(int[] firstAr, int[] secondAr)
+        static bool CalculateEsc(int[] firstAr, int[] secondAr)                                     //Проверка массивов
         {
             int s = 0;
             bool concl = false;
             int f = 0;
+            int ff = 0;
             if (firstAr.Length < secondAr.Length)
                 return concl;
             else
@@ -100,30 +142,41 @@ namespace Array2
                 {
                     if (firstAr[f] == secondAr[s])
                     {
-                        concl = true;
-                        s++;
-                        if (s == secondAr.Length)
-                            return concl;
-                    }
-                    else
-                    {
-                        if (f > 0 && s > 0 && firstAr[f - 1] == secondAr[s - 1])
+                        ff = f;
+                        while (ff < firstAr.Length)
                         {
-                            concl = false;
-                            return concl;
+                            if (firstAr[ff] == secondAr[s])
+                            {
+                                concl = true;
+                                s++;
+                                if (s == secondAr.Length)
+                                    return concl;
+                            }
+                            else
+                            {
+                                if (concl) //ff > 0 && s > 0 && firstAr[ff - 1] == secondAr[s - 1] Условие правильного порядка цифр
+                                {
+                                    concl = false;
+                                    break;
+                                }
+                            }
+                            ff++;
+                            if (ff == firstAr.Length && s < secondAr.Length)
+                            {
+                                concl = false;
+                                break;
+                            }
                         }
                     }
-                    f++;
-                    if (f == firstAr.Length && s < secondAr.Length)
-                    {
+                    else
                         concl = false;
-                        return concl;
-                    }
+                    f++;
+                    s = 0;
                 }
                 return concl;
             }
         }
-        static int[] InputAr(int n)
+        static int[] InputElofAr(int n)                                             //Ввод количества Элементов массива и возвращение массива
         {
             Console.WriteLine($"Введите количество элементов {n}-го массива");
             int NumAr = InputNum();
@@ -134,23 +187,27 @@ namespace Array2
             }
             return array;
         }
-        static void InputNumAr(int[] array,int num)
+        static void InputNumAr(int[] array,int num)                              //Ввод элемента массива
         {
             Console.WriteLine($"Введите значение {num}-го элемента массива");
             array[num] = InputNum();
         }
-        static int InputNum()
+        static int InputNum()                                                    //Ввод числа
         {
-            int c;
             string a = Console.ReadLine();
-            bool b = int.TryParse(a, out c);
-            while (b == false || int.Parse(a) < 0)
+            return int.Parse(a);
+        }
+        static void Check(string a)                                              //Проверка
+        {
+            bool b = int.TryParse(a, out int c);
+            do
             {
-                Console.WriteLine("Ошибка ввода, введите число ещё раз");
                 a = Console.ReadLine();
                 b = int.TryParse(a, out c);
+                if (b == false || int.Parse(a) < 0)
+                    Console.WriteLine("Ошибка ввода, введите число ещё раз");
             }
-            return int.Parse(a);
+            while (b == false || int.Parse(a) < 0);
         }
     }
 }
