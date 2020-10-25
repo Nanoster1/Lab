@@ -43,33 +43,29 @@ namespace Slavyanin
                     {
                         fracNum1InSS = fullTransfer(num1, ss);                                             //Первое дробное число в системе счисления
                         fracNum2InSS = fullTransfer(num2, ss);                                             //Второе дробное число в ситстеме счисления
-                                                                                                           //Метод операции
+                        OperationOutput(op, num1, num2, ss);                                               //Метод операции
                                                                                                            //Метод шагов
-                                                                                                           //Вывод
                     }
                     else if (num1.Contains(',') && !num2.Contains(','))
                     {
                         fracNum1InSS = fullTransfer(num1, ss);                                             //Первое дробное число в системе счисления
-                        fracNum2InSS = fullTransfer(num2, ss);                                             //Второе дробное число в ситстеме счисления
-                                                                                                           //Метод операции
+                        num2InSS = new string(Transfer(num2, ss).Reverse().ToArray());                     //Второе обычное число в системе счисления
+                        OperationOutput(op, num1, num2, ss);                                               //Метод операции
                                                                                                            //Метод шагов
-                                                                                                           //Вывод
                     }
                     else if (!num1.Contains(',') && num2.Contains(','))
                     {
                         num1InSS = new string(Transfer(num1, ss).Reverse().ToArray());                     //Первое обычное число в системе счисления
                         fracNum2InSS = fullTransfer(num2, ss);                                             //Второе дробное число в ситстеме счисления
-                                                                                                           //Метод операции
+                        OperationOutput(op, num1, num2, ss);                                               //Метод операции
                                                                                                            //Метод шагов
-                                                                                                           //Вывод
                     }
                     else if (!num1.Contains(',') && !num2.Contains(','))
                     {
                         num1InSS = new string(Transfer(num1, ss).Reverse().ToArray());                     //Первое обычное число в системе счисления
                         num2InSS = new string(Transfer(num2, ss).Reverse().ToArray());                     //Второе обычное число в системе счисления
-                                                                                                           //Метод операции
+                        OperationOutput(op, num1, num2, ss);                                               //Метод операции
                                                                                                            //Метод шагов
-                                                                                                           //Вывод
                     }
                     break;
                 case ConsoleKey.W:                                                                         //Перевод числа в СС
@@ -109,11 +105,46 @@ namespace Slavyanin
                     break;
                 case ConsoleKey.R:                                                                         //Вещественная чушь
                     Console.Clear();
+                    Console.WriteLine("Введите число, пожалуйста.");
                     num1 = Input();                                                                        //Число
+                    Console.WriteLine($"Ваше число в представлнении типа float: {WriteRealNumber(num1)}");
+                    break;
+                case ConsoleKey.T:                                                                         //Перевод в 10-ю СС
+                    Console.Clear();
+                    Console.WriteLine("Введите число, пожалуйста.");
+                    num1 = Input();
+                    ss = WriteSS();                                                                        //Система счисления
+                    Console.WriteLine($"Ваше число: {num1}");
+                    Console.WriteLine($"Ответ в 10-й СС: {TransferInTen(num1, ss)}");
+                    Console.WriteLine();
                     break;
 
 
             }
+        }
+        static void OperationOutput(string op, string num1, string num2, double ss)
+        {
+            double normalNum1 = double.Parse(num1);
+            double normalNum2 = double.Parse(num2);
+            double finalNum = 0;
+            if (op == "+")
+            {
+                finalNum = normalNum1 + normalNum2;
+            }
+            else if (op == "-")
+            {
+                finalNum = normalNum1 - normalNum2;
+            }
+            else if (op == "*")
+            {
+                finalNum = normalNum1 * normalNum2;
+            }
+            else if (op == "/")
+            {
+                finalNum = normalNum1 / normalNum2;
+            }
+            Console.WriteLine($"Ответ в 10-й СС: {finalNum}");
+            Console.WriteLine($"Ответ в {ss}-й СС: {new string(Transfer(finalNum.ToString(), ss).Reverse().ToArray())}");
         }
         static void Greetings2()
         {
@@ -121,8 +152,9 @@ namespace Slavyanin
             Console.WriteLine("Нажмите W, если хотите перевести число в СС (не больше 50-й)");
             Console.WriteLine("Нажмите E, если хотите увидеть число римскими символами");
             Console.WriteLine("Нажмите R, если хотите перевести число в вещественный тип");
+            Console.WriteLine("Нажмите T, если хотите перевести число из СС (не больше 50-й) в 10-ю СС");
         }
-        static string WriteNegativeNum(string num, double ss)                                     //Представление в компе отрицательного числа
+        static string WriteNegativeNum(string num, double ss)                                               //Представление в компе отрицательного числа
         {
             num = num.Replace("-", "");
             string numInSS = new string(Transfer(num, 2).Reverse().ToArray()); //Число в 2-й СС
@@ -133,23 +165,23 @@ namespace Slavyanin
             numInSS = numInSS.Replace("0", "2");
             numInSS = numInSS.Replace("1", "0");
             numInSS = numInSS.Replace("2", "1");
-            double i = TransferFinalNum(numInSS, ss);
+            double i = double.Parse(TransferInTenMain(numInSS, ss));
             i += 1;
             return Convert.ToString(i);
         }
         static string WriteSign()                            //Ввод операции
         {
+            string op;
             Console.WriteLine("Введите операцию с этими числами");
-            string op = Console.ReadLine();
             do
             {
                 op = Console.ReadLine();
-                if (op != "+" || op != "-" || op != "*" || op != "/")
+                if (op != "+" && op != "-" && op != "*" && op != "/")
                 {
                     Console.WriteLine("Возможные операции:  + ,  -  ,  *  ,  / ");
                 }
             }
-            while (op != "+" || op != "-" || op != "*" || op != "/");
+            while (op != "+" && op != "-" && op != "*" && op != "/");
             return op;
         }
         static int WriteSS()                                 //Ввод системы счисления
@@ -205,22 +237,48 @@ namespace Slavyanin
                 numInSS += intnum;
             return numInSS;
         }
-        static double TransferFinalNum(string numFinal, double ss)
+        static string TransferInTen(string num, double ss)
+        {
+                string numInSS;
+                string[] qoma = num.Split(',');
+                numInSS = TransferInTenMain(qoma[0], ss);
+                numInSS = numInSS + ",";
+                numInSS += TransferInTenFrac(qoma[1], ss);
+                return numInSS;
+        }
+        static string TransferInTenFrac(string num, double ss)
         {
             double final = 0;
-            int i = numFinal.Length - 1;
-            for (int q = 0; q < numFinal.Length; q++)
+            int i = -1;
+            for (int q = 0; q < num.Length; q++)
             {
                 double p = Math.Pow(ss, i);
-                if (Convert.ToInt32(numFinal[q].ToString()) > 9)
+                if (Convert.ToInt32(num[q].ToString()) > 9)
                 {
-                    final += CheckEnam(numFinal, q) * p;
+                    final += CheckEnam(num, q) * p;
                 }
                 else
-                    final += Convert.ToInt32(numFinal[q]) * p;
+                    final += Convert.ToInt32(num[q]) * p;
                 i -= 1;
             }
-            return final;
+            return final.ToString();
+        }
+        static string TransferInTenMain(string num, double ss) //Перевод в десятичную СС
+        {
+            double final = 0;
+            int i = num.Length - 1;
+            for (int q = 0; q < num.Length; q++)
+            {
+                double p = Math.Pow(ss, i);
+                if (Convert.ToInt32(num[q].ToString()) > 9)
+                {
+                    final += CheckEnam(num, q) * p;
+                }
+                else
+                    final += Convert.ToInt32(num[q]) * p;
+                i -= 1;
+            }
+            return final.ToString();
         }
         static double CheckEnam(string numFinal, int q)
         {
@@ -274,7 +332,8 @@ namespace Slavyanin
             string numInSS;
             string[] qoma = num.Split(',');
             numInSS = new string(Transfer(qoma[0], ss).Reverse().ToArray());
-            numInSS = numInSS + "," + TransferFrac(qoma[1], ss);
+            numInSS = numInSS + ",";
+            numInSS += TransferFrac(qoma[1], ss);
             return numInSS;
         }
         static string TransferFrac(string num, double ss)
@@ -284,8 +343,10 @@ namespace Slavyanin
             int intNum = int.Parse(num);
             string finalFrac = "";
             int time;
-            while (intNum != 0)
+            int i = 0;
+            while (intNum != 0 && i < 10)
             {
+                i++;
                 intNum *= sss;
                 time = intNum / div;
                 if (time > 9)
@@ -298,6 +359,26 @@ namespace Slavyanin
                     intNum %= div;
             }
             return finalFrac;
+        }
+        static string WriteRealNumber(string num)
+        {
+            string[] numB = num.Split(',');
+            string numD = fullTransfer(num, 2);            //Доделать
+            numD = numD.Replace(",", "");
+            numD = numD.Remove(0, 1);
+            string numA;
+            numB[0] = numB[0].Replace("-", "");
+            string numQ = new string(Transfer(numB[0], 2).Reverse().ToArray());
+            int time = 127 - 1 + numQ.Length;
+            if (num.Contains("-"))
+                numA = "1,";
+            else
+                numA = "0,";
+            numA += new string(Transfer(time.ToString(), 2).Reverse().ToArray());
+            numA += numD;
+            while (numA.Length < 32)
+                numA += "0";
+            return numA;
         }
     }
 }
